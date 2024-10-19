@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shovel-Dumper Optimization by Match Factor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Shovel-Dumper Optimization by Match Factor</h2>
+      <div id="basicInputs">
+        <label for="noftypeshovels"
+          >Specify the number of different types of shovels in the
+          system?</label
+        >
+        <input type="number" id="noftypeshovels" required />
+
+        <label for="noftypedumpers"
+          >Specify the number of different types of dumpers/trucks in the
+          system?</label
+        >
+        <input type="number" id="noftypedumpers" required />
+
+        <button onclick="generateDetailInputs()">Submit</button>
+      </div>
+
+      <div id="detailsInputs"></div>
+      <button
+        class="hidden"
+        id="calculateButton"
+        onclick="calculateMatchFactor()"
+      >
+        Calculate Match Factor
+      </button>
+
+      <div id="result"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
