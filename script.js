@@ -12,9 +12,9 @@ function generateDetailInputs() {
   for (let i = 1; i <= noftypeshovels; i++) {
     detailsInputs.innerHTML += `
         <h3>Shovel Type ${i}</h3>
-        <label>Capacity of Shovel ${i}:</label>
+        <label>Capacity of Shovel type ${i} in tons:</label>
         <input type="number" id="caps${i}" required>
-        <label>Cycle Time of Shovel ${i}:</label>
+        <label>Cycle Time of Shovel type ${i} in seconds:</label>
         <input type="number" id="cycs${i}" required>
         <label>Number of Shovels of this Type ${i}:</label>
         <input type="number" id="nofshovelst${i}" required>
@@ -24,9 +24,9 @@ function generateDetailInputs() {
   for (let i = 1; i <= noftypedumpers; i++) {
     detailsInputs.innerHTML += `
         <h3>Dumper Type ${i}</h3>
-        <label>Capacity of Dumper ${i}:</label>
+        <label>Capacity of Dumper type ${i} in tons:</label>
         <input type="number" id="capd${i}" required>
-        <label>Cycle Time of Dumper ${i}:</label>
+        <label>Cycle Time of Dumper type ${i} in seconds:</label>
         <input type="number" id="cycd${i}" required>
         <label>Number of Dumpers of this Type ${i}:</label>
         <input type="number" id="nofdumperst${i}" required>
@@ -73,6 +73,79 @@ function gcdOfArray(arr) {
 //   return b === 0 ? a : gcd(b, a % b);
 // }
 
+// function calculateMatchFactor() {
+//   let dictionary = {};
+
+//   const noftypeshovels = parseInt(
+//     document.getElementById("noftypeshovels").value
+//   );
+//   const noftypedumpers = parseInt(
+//     document.getElementById("noftypedumpers").value
+//   );
+
+//   let totalDumpers = 0;
+//   let dumperCycleTimeSum = 0;
+//   // let lcmLoadingTimesSum = 0;
+//   let arrayofdumperthistype = [];
+//   let lcmofdumpertype = 0;
+//   let lcmofdumpertypes = [];
+
+//   for (let i = 1; i <= noftypedumpers; i++) {
+//     const capd = parseInt(document.getElementById(`capd${i}`).value);
+//     const cycd = parseInt(document.getElementById(`cycd${i}`).value);
+//     const nofdumperst = parseInt(
+//       document.getElementById(`nofdumperst${i}`).value
+//     );
+
+//     totalDumpers += nofdumperst;
+//     dumperCycleTimeSum += nofdumperst * cycd;
+//     arrayofdumperthistype = [];
+//     lcmofdumpertype = 0;
+
+//     for (let j = 1; j <= noftypeshovels; j++) {
+//       const caps = parseInt(document.getElementById(`caps${j}`).value);
+//       const cycs = parseInt(document.getElementById(`cycs${j}`).value);
+
+//       const swings = customRound(capd / caps);
+//       const loadingTime = swings * cycs;
+
+//       const key = `t${i}loadings${j}`;
+//       const value = loadingTime;
+//       dictionary[key] = value;
+//       arrayofdumperthistype.push(loadingTime);
+//     }
+
+//     lcmofdumpertype = lcm(arrayofdumperthistype);
+//     lcmofdumpertypes.push(lcmofdumpertype);
+//   }
+
+//   console.log(lcmofdumpertypes);
+//   console.log(totalDumpers);
+
+//   let loderssum = 0;
+
+//   for (let i = 1; i <= noftypedumpers; i++) {
+//     for (let j = 1; j <= noftypeshovels; j++) {
+//       const varName = `t${i}loadings${j}`;
+//       loderssum +=
+//         parseInt(document.getElementById(`nofshovelst${i}`).value) *
+//         (lcmofdumpertypes[i - 1] / dictionary[varName]);
+//     }
+//   }
+
+//   const matchFactor =
+//     (Math.pow(totalDumpers, 2) * sumOfArray(lcmofdumpertypes)) /
+//     (loderssum * dumperCycleTimeSum);
+//   console.log(dictionary);
+//   console.log("lcmofdumpertypes  " + sumOfArray(lcmofdumpertypes));
+//   console.log("dumperCycleTimeSum  " + dumperCycleTimeSum);
+//   console.log("loderssum  " + loderssum);
+
+//   document.getElementById(
+//     "result"
+//   ).innerHTML = `<h3>Match Factor: ${matchFactor.toFixed(2)}</h3>`;
+// }
+
 function calculateMatchFactor() {
   let dictionary = {};
 
@@ -83,28 +156,41 @@ function calculateMatchFactor() {
     document.getElementById("noftypedumpers").value
   );
 
+  if (isNaN(noftypeshovels) || isNaN(noftypedumpers)) {
+    alert("Please enter valid numbers for the number of shovels and dumpers.");
+    return;
+  }
+
   let totalDumpers = 0;
   let dumperCycleTimeSum = 0;
-  // let lcmLoadingTimesSum = 0;
   let arrayofdumperthistype = [];
   let lcmofdumpertype = 0;
   let lcmofdumpertypes = [];
 
   for (let i = 1; i <= noftypedumpers; i++) {
-    const capd = parseInt(document.getElementById(`capd${i}`).value);
-    const cycd = parseInt(document.getElementById(`cycd${i}`).value);
+    const capd = parseInt(document.getElementById(`capd${i}`)?.value);
+    const cycd = parseInt(document.getElementById(`cycd${i}`)?.value);
     const nofdumperst = parseInt(
-      document.getElementById(`nofdumperst${i}`).value
+      document.getElementById(`nofdumperst${i}`)?.value
     );
+
+    if (isNaN(capd) || isNaN(cycd) || isNaN(nofdumperst)) {
+      alert(`Please fill in all fields for Dumper Type ${i}.`);
+      return;
+    }
 
     totalDumpers += nofdumperst;
     dumperCycleTimeSum += nofdumperst * cycd;
     arrayofdumperthistype = [];
-    lcmofdumpertype = 0;
 
     for (let j = 1; j <= noftypeshovels; j++) {
-      const caps = parseInt(document.getElementById(`caps${j}`).value);
-      const cycs = parseInt(document.getElementById(`cycs${j}`).value);
+      const caps = parseInt(document.getElementById(`caps${j}`)?.value);
+      const cycs = parseInt(document.getElementById(`cycs${j}`)?.value);
+
+      if (isNaN(caps) || isNaN(cycs)) {
+        alert(`Please fill in all fields for Shovel Type ${j}.`);
+        return;
+      }
 
       const swings = customRound(capd / caps);
       const loadingTime = swings * cycs;
@@ -119,16 +205,13 @@ function calculateMatchFactor() {
     lcmofdumpertypes.push(lcmofdumpertype);
   }
 
-  console.log(lcmofdumpertypes);
-  console.log(totalDumpers);
-
   let loderssum = 0;
 
   for (let i = 1; i <= noftypedumpers; i++) {
     for (let j = 1; j <= noftypeshovels; j++) {
       const varName = `t${i}loadings${j}`;
       loderssum +=
-        parseInt(document.getElementById(`nofshovelst${i}`).value) *
+        parseInt(document.getElementById(`nofshovelst${j}`).value) *
         (lcmofdumpertypes[i - 1] / dictionary[varName]);
     }
   }
@@ -136,10 +219,6 @@ function calculateMatchFactor() {
   const matchFactor =
     (Math.pow(totalDumpers, 2) * sumOfArray(lcmofdumpertypes)) /
     (loderssum * dumperCycleTimeSum);
-  console.log(dictionary);
-  console.log("lcmofdumpertypes  " + sumOfArray(lcmofdumpertypes));
-  console.log("dumperCycleTimeSum  " + dumperCycleTimeSum);
-  console.log("loderssum  " + loderssum);
 
   document.getElementById(
     "result"
